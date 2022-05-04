@@ -144,3 +144,25 @@ dmypy.json
 .history/
 
 .mypy_cache
+
+# Dev\hw03_forms.gitignore
+.sta/
+.idea/
+.static/
+yatube/static/
+yatube/static
+yatube/.static/
+yatube/.static/
+.yatube/static/
+/yatube/static/
+/yatube/static/
+
+
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+
+/yatube/static/
