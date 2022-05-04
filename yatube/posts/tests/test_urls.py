@@ -107,14 +107,14 @@ class StaticURLTests(TestCase):
         """Проверка, что URL-адрес использует соответствующий шаблон."""
         templates_pages_names = {
             reverse('posts:index'): 'posts/index.html',
-            reverse('posts:group_list',
-                    kwargs={'slug': self.group.slug}): 'posts/group_list.html',
+            reverse('posts:group_list', kwargs={
+                'slug': self.group.slug}): 'posts/group_list.html',
             reverse('posts:profile', kwargs={
                 'username': self.user_author.username}): 'posts/profile.html',
             reverse('posts:post_detail', kwargs={
                 'post_id': self.post.id}): 'posts/post_detail.html',
             reverse('posts:post_edit', kwargs={
-                        'post_id': self.post.id}): 'posts/create_post.html',
+                'post_id': self.post.id}): 'posts/create_post.html',
             reverse('posts:post_create'): 'posts/create_post.html',
         }
         for reverse_name, template in templates_pages_names.items():
