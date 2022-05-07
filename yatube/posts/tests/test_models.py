@@ -22,57 +22,41 @@ class PostModelTest(TestCase):
             group=cls.group,
         )
 
-    def test_post_str(self):
-        """Проверка, что Post.__str__ возвращает первые 15 символов поста."""
-        self.assertEqual(self.post.text[:15], str(self.post))
-
     def test_group_str(self):
-        """Проверка, что Group.__str__ возвращает название группы."""
-        self.assertEqual(self.group.title, str(self.group))
-
-    def test_post_verbose_name(self):
-        """Проверка verbose_name у модели Post."""
-        field_verboses = {
-            'text': 'Текст поста',
-            'pub_date': 'Дата публикации',
-            'author': 'Автор',
-            'group': 'Группа',
+        """Проверка, что Post.__str__ и Group.__str__ работает коректно."""
+        value__str__ = {
+            str(self.post): self.post.text[:15],
+            str(self.group): self.group.title,
         }
-        for value, expected in field_verboses.items():
+        for value, expected in value__str__.items():
+            with self.subTest(value=value):
+                self.assertEqual(value, expected)
+
+    def test_verbose_name(self):
+        """Проверка verbose_name у модели Post."""
+        field_verboses = (
+            ('text', 'Текст поста', self.post),
+            ('pub_date', 'Дата публикации', self.post),
+            ('author', 'Автор', self.post),
+            ('group', 'Группа', self.post),
+            ('title', 'Название группы', self.group),
+            ('slug', 'Уникальный адрес группы', self.group),
+            ('description', 'Описание сообщества', self.group),
+        )
+        for value, expected, args in field_verboses:
             with self.subTest(value=value):
                 self.assertEqual(
-                    self.post._meta.get_field(value).verbose_name, expected)
+                    args._meta.get_field(value).verbose_name, expected)
 
-    def test_group_verbose_name(self):
-        """Проверка verbose_name у модели Group."""
-        field_verboses = {
-            'title': 'Название группы',
-            'slug': 'Уникальный адрес группы',
-            'description': 'Описание сообщества',
-        }
-        for field, expected in field_verboses.items():
-            with self.subTest(field=field):
+    def test_help_text(self):
+        field_help_texts = (
+            ('title', 'Укажите название группы', self.group),
+            ('slug', 'Выберите из списка или укажите новый адрес', self.group),
+            ('description', 'Добавьте описание группы', self.group),
+            ('text', 'Добавьте описание поста', self.post),
+            ('group', 'Укажите группу в которой опубликуется пост', self.post),
+        )
+        for value, expected, args in field_help_texts:
+            with self.subTest(value=value):
                 self.assertEqual(
-                    self.group._meta.get_field(field).verbose_name, expected)
-
-    def test_post_help_text(self):
-        """Проверка help_text у модели Post."""
-        field_help_texts = {
-            'text': 'Добавьте описание поста',
-            'group': 'Укажите группу в которой опубликуется пост',
-        }
-        for field, expected in field_help_texts.items():
-            with self.subTest(field=field):
-                self.assertEqual(
-                    self.post._meta.get_field(field).help_text, expected)
-
-    def test_group_help_text(self):
-        field_help_texts = {
-            'title': 'Укажите название группы',
-            'slug': 'Выберите из списка или укажите новый адрес',
-            'description': 'Добавьте описание группы',
-        }
-        for field, expected in field_help_texts.items():
-            with self.subTest(field=field):
-                self.assertEqual(
-                    self.group._meta.get_field(field).help_text, expected)
+                    args._meta.get_field(value).help_text, expected)

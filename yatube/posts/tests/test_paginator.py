@@ -22,8 +22,7 @@ class PaginatorCountTests(TestCase):
         cls.user_author = User.objects.create_user(
             username='user_author'
         )
-        cls.ALL_POST_COUNT = 127
-
+        cls.ALL_POST_COUNT = 10
         Post.objects.bulk_create(
             Post(author=cls.user_author,
                  text=f'Тестовый пост{num_post}',
@@ -37,10 +36,14 @@ class PaginatorCountTests(TestCase):
     def test_paginator(self):
         """Проверка работы пагинатора"""
         last_page = ceil(self.ALL_POST_COUNT / settings.NUMBER_OF_ENTRIES)
-        # math.ceil(X) – округление до ближайшего большего числа.
-        # math.ceil(57/10)=6, math.ceil(1/10)=1 -> тоесть первая страница.
         count_posts_on_page = self.ALL_POST_COUNT % settings.NUMBER_OF_ENTRIES
-
+        if count_posts_on_page == 0:
+            count_posts_on_page = settings.NUMBER_OF_ENTRIES
+        # Вычисление коректно работает от self.ALL_POST_COUNT = 10
+        pages = (
+            (1, settings.NUMBER_OF_ENTRIES),
+            (last_page, count_posts_on_page)
+        )
         url_pages = {
             reverse('posts:index'): 'posts/index.html',
             reverse('posts:group_list', kwargs={
@@ -50,8 +53,8 @@ class PaginatorCountTests(TestCase):
         }
         for reverse_name, template in url_pages.items():
             with self.subTest(reverse_name=reverse_name):
-                response = self.unauthorized_client.get(
-                    reverse_name, {'page': last_page}
-                )
-                self.assertEqual(
-                    len(response.context['page_obj']), count_posts_on_page)
+                for page, count in pages:
+                    response = self.unauthorized_client.get(
+                        reverse_name, {'page': page})
+                    self.assertEqual(
+                        len(response.context['page_obj']), count)
