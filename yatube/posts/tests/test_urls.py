@@ -53,6 +53,26 @@ class PostURLTests(TestCase):
             with self.subTest(reverse_name=reverse_name):
                 self.assertEqual(url, reverse_name)
 
+    def test_url_reverse_uses_correct_template(self):
+        """Проверка, что URL-адрес использует соответствующий шаблон."""
+        templates_pages_names = {
+            reverse('posts:index'): 'posts/index.html',
+            reverse('posts:group_list', kwargs={
+                'slug': self.group.slug}): 'posts/group_list.html',
+            reverse('posts:profile', kwargs={
+                'username': self.user_author.username}): 'posts/profile.html',
+            reverse('posts:post_detail', kwargs={
+                'post_id': self.post.id}): 'posts/post_detail.html',
+            reverse('posts:post_edit', kwargs={
+                'post_id': self.post.id}): 'posts/create_post.html',
+            reverse('posts:post_create'): 'posts/create_post.html',
+        }
+
+        for reverse_name, template in templates_pages_names.items():
+            with self.subTest(reverse_name=reverse_name):
+                response = self.authorized_user.get(reverse_name)
+                self.assertTemplateUsed(response, template)
+
     def test_user_status_code_bool(self):
         """Проверка доступа для пользователей."""
         field_urls_code = (
