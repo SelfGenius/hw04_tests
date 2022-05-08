@@ -36,7 +36,7 @@ class PaginatorCountTests(TestCase):
     def test_paginator(self):
         """Проверка работы пагинатора"""
         last_page = ceil(self.ALL_POST_COUNT / settings.NUMBER_OF_ENTRIES)
-        count_posts_on_page = (self.ALL_POST_COUNT - (last_page-1)
+        count_posts_on_page = (self.ALL_POST_COUNT - (last_page - 1)
                                * settings.NUMBER_OF_ENTRIES)
         url_pages = {
             reverse('posts:index'): 'posts/index.html',
