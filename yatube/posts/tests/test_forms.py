@@ -103,7 +103,7 @@ class PostPagesTests(TestCase):
             reverse('posts:post_detail', kwargs={'post_id': self.post.id})
         )
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        edit_post = Post.objects.first()
+        edit_post = Post.objects.get(id=self.post.id)
         self.assertTrue(Post.objects.filter(id=self.post.id).exists())
         self.assertEqual(edit_post.author.username, self.user_author.username)
         self.assertEqual(edit_post.text, form_data['text'])
