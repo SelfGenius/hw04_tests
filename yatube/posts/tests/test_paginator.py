@@ -22,7 +22,7 @@ class PaginatorCountTests(TestCase):
         cls.user_author = User.objects.create_user(
             username='user_author'
         )
-        cls.ALL_POST_COUNT = 6
+        cls.ALL_POST_COUNT = 16
         Post.objects.bulk_create(
             Post(author=cls.user_author,
                  text=f'Тестовый пост{num_post}',
